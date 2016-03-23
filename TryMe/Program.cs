@@ -2,16 +2,29 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TryMe
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        static string Recipe = "";
+        private static void Main(string[] args)
         {
-            Debug.WriteLine("This is the test on Git repository");
+            string r1 = "ABCDEF";
+            string r2 = "D";
+
+            AddRecipe(r1);
+            AddRecipe(r2);
+
+            Debug.WriteLine(Recipe);
+
+        }
+        public static void AddRecipe(string recipe)
+        {
+            if (!Recipe.Split('|').Any(r=> r.Trim() ==recipe.Trim()))
+            {
+                Recipe += string.IsNullOrEmpty(Recipe) ? recipe : " | " + recipe;
+            }
         }
     }
 }
