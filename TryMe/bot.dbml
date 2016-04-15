@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Bot" Class="botDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=DCCPLBNG055-PC\MSSQLSERVER2014;Initial Catalog=Bot;Integrated Security=True" SettingsObjectName="TryMe.Properties.Settings" SettingsPropertyName="BotConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Phrase" Member="Phrases">
+    <Type Name="Phrase">
+      <Column Name="input" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="output" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="PhraseId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="hitCount" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="lastHitDateTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="createdDateTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="priority" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+</Database>
