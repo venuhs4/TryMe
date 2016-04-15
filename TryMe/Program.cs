@@ -34,6 +34,7 @@ namespace TryMe
             float initialAmount = 3700;
 
             Debug.WriteLine("This is the test for git hub");
+            Debug.WriteLine("This is the test for git hub - master");
 
             Debug.WriteLine(JsonConvert.SerializeObject("", Formatting.Indented));
         }
