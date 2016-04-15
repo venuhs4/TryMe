@@ -32,14 +32,8 @@ namespace TryMe
             //Debug.WriteLine(DateTime.Now.AddDays(-60).Ticks);
             //ImageTOConsole();
             float initialAmount = 3700;
-            float monthlyGailPercent = 2;
-            float currentAmount = initialAmount;
-            for (int i = 0; i < 12; i++)
-            {
-                var currentAmountTemp = currentAmount;
-                currentAmount = currentAmount + currentAmount * monthlyGailPercent / 100;
-                Debug.WriteLine("Worth: {0,8}  Gain :{1,8}", currentAmount, currentAmount/initialAmount*100);
-            }
+
+            Debug.WriteLine("This is the test for git hub");
 
             Debug.WriteLine(JsonConvert.SerializeObject("", Formatting.Indented));
         }
