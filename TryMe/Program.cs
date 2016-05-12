@@ -32,6 +32,7 @@ namespace TryMe
             //added by Venu-2
             RSA();
             Console.ReadKey();
+            RSA();
             Console.WriteLine("asdfsaddf");
         }
         private static void RSA()
