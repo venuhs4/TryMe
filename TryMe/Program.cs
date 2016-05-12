@@ -30,7 +30,7 @@ namespace TryMe
             //added by Venu after read line commit
             RSA();
             //added by Venu-2
-            RSA();
+            
             Console.ReadKey();
         }
         private static void RSA()
