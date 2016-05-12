@@ -1,129 +1,82 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
-//using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
-using System.IO.Compression;
+using System.IO.Pipes;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace TryMe
 {
-
-    class Program
+    internal class Program
     {
-        public int Prop1 { get; set; }
-        public string Prop2 { get; set; }
-        public string Prop3 { get; set; }
-        public string Prop4 { get; set; }
-        public string Prop5 { get; set; }
-        public string Prop6 { get; set; }
-        static string symbol = "";
-        static void Main()
+        private static string _privateKey { get; set; }
+        private static string _publicKey { get; set; }
+        private static void Main()
         {
-            //MultiTaskTest();
-            //Debug.WriteLine(DateTime.Now.AddDays(-60).Ticks);
-            //ImageTOConsole();
-            float initialAmount = 3700;
+            RSA();
+           
+        }
+        private static void RSA()
+        {
+            var rsa = new RSACryptoServiceProvider();
+            _privateKey = rsa.ToXmlString(true);
+            _publicKey = rsa.ToXmlString(false);
 
-            Debug.WriteLine("This is the test for git hub");
-            Debug.WriteLine("This is the test for git hub - master");
-
-            Debug.WriteLine(JsonConvert.SerializeObject("", Formatting.Indented));
+            var text = "Test1";
+            Console.WriteLine("RSA // Text to encrypt: " + text);
+            var enc = Encrypt(text);
+            Console.WriteLine("RSA // Encrypted Text: " + enc);
+            var dec = Decrypt(enc);
+            Console.WriteLine("RSA // Decrypted Text: " + dec);
         }
 
-        private static void ImageTOConsole()
+        public static string Decrypt(string data)
         {
-            Bitmap image = new Bitmap(@"C:\Users\Public\Pictures\Sample Pictures\Penguins.jpg");
-
-            for (int i = 0; i < image.Width; i++)
+            var rsa = new RSACryptoServiceProvider();
+            var dataArray = data.Split(new char[] { ',' });
+            byte[] dataByte = new byte[dataArray.Length];
+            for (int i = 0; i < dataArray.Length; i++)
             {
-                for (int j = 0; j < image.Height; j++)
-                {
-                    Console.CursorLeft = i;
-                    Console.CursorTop = j;
-                    var c = image.GetPixel(i, j);
-                    if ((c.R + c.G + c.B) > 255 * 3 / 2)
-                    {
-                        Console.Write("*");
-                    }
-                    else
-                    {
-                        Console.Write(" ");
-                    }
-
-                    Console.ForegroundColor = ConsoleColor.Red;
-                }
+                dataByte[i] = Convert.ToByte(dataArray[i]);
             }
+
+            rsa.FromXmlString(_privateKey);
+            var decryptedByte = rsa.Decrypt(dataByte, false);
+            return Encoding.ASCII.GetString(decryptedByte);
         }
 
-        public static string MoveSymbol()
+        public static string Encrypt(string data)
         {
-            symbol = symbol.Substring(1) + symbol.Substring(0, 1);
-            return symbol;
-        }
-
-        private static void MultiTaskTest()
-        {
-            ConcurrentDictionary<int, List<Program>> list = new ConcurrentDictionary<int, List<Program>>();
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            Parallel.For(0, 20000, (i) =>
+            var rsa = new RSACryptoServiceProvider();
+            rsa.FromXmlString(_publicKey);
+            var dataToEncrypt = Encoding.ASCII.GetBytes(data);
+            var encryptedByteArray = rsa.Encrypt(dataToEncrypt, false).ToArray();
+            var length = encryptedByteArray.Count();
+            var item = 0;
+            var sb = new StringBuilder();
+            foreach (var x in encryptedByteArray)
             {
-                Stopwatch s = new Stopwatch();
-                s.Start();
-                //Thread.Sleep(1000);
-                List<Program> l = new List<Program>();
-                for (int j = 0; j < 30; j++)
-                {
-                    l.Add(new Program()
-                    {
-                        Prop1 = j,
-                        Prop2 = Guid.NewGuid().ToString(),
-                        Prop3 = Guid.NewGuid().ToString(),
-                        Prop4 = Guid.NewGuid().ToString(),
-                        Prop5 = Guid.NewGuid().ToString(),
-                        Prop6 = Guid.NewGuid().ToString()
-                    });
-                }
+                item++;
+                sb.Append(x);
 
-                list.AddOrUpdate(i, l, (key, value) => value);
-                Debug.WriteLine("Done:{0,4} - {1}", i, s.Elapsed);
-            });
+                if (item < length)
+                    sb.Append(",");
+            }
 
-            Debug.WriteLine(JsonConvert.SerializeObject(list, Formatting.Indented));
-
-            Debug.WriteLine(sw.Elapsed);
-            Debug.WriteLine(DateTime.Now);
-        }
-
-
-    }
-    public class Nomen : IEqualityComparer<Nomen>
-    {
-        public string Id;
-        public string NomenCode;
-        public string ProducerName;
-        public decimal? minPrice;
-
-        bool IEqualityComparer<Nomen>.Equals(Nomen x, Nomen y)
-        {
-            if (x.Id == y.Id)
-                return true;
-
-            return (x.NomenCode == y.NomenCode && x.ProducerName == y.ProducerName);
-        }
-
-        int IEqualityComparer<Nomen>.GetHashCode(Nomen obj)
-        {
-            return 2;
+            return sb.ToString();
         }
     }
 }
