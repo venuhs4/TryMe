@@ -27,7 +27,7 @@ namespace TryMe
         private static void Main()
         {
             RSA();
-           
+            Console.ReadLine();
         }
         private static void RSA()
         {
