@@ -26,8 +26,9 @@ namespace TryMe
         private static string _publicKey { get; set; }
         private static void Main()
         {
+            Console.ReadLine();
             RSA();
-           
+            Console.ReadKey();
         }
         private static void RSA()
         {
