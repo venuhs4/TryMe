@@ -34,6 +34,7 @@ namespace TryMe
             Console.ReadKey();
             RSA();
             Console.WriteLine("asdfsaddf");
+            RSA();
         }
         private static void RSA()
         {
